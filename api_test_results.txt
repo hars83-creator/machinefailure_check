@@ -1,0 +1,20 @@
+1 health: HTTP 200 -> {'status': 'ok', 'models': ['logreg', 'rf', 'xgb']}
+2 healthy compare: HTTP 200 -> [{'model': 'logreg', 'failure_probability': 0.021335525021226064, 'prediction': 0, 'latency_ms': 4.6188579999579815}, {'model': 'rf', 'failure_probability': 0.0, 'prediction': 0, 'latency_ms': 62.594177999926615}, {'model': 'xgb', 'failure_probability': 0.001744622248224914, 'prediction': 0, 'latency_ms': 5.201030000534956}]
+3 risky compare: HTTP 200 -> [{'model': 'logreg', 'failure_probability': 0.996740999283372, 'prediction': 1, 'latency_ms': 8.187254999938887}, {'model': 'rf', 'failure_probability': 0.8366666666666667, 'prediction': 1, 'latency_ms': 51.03869500089786}, {'model': 'xgb', 'failure_probability': 0.9999802112579346, 'prediction': 1, 'latency_ms': 4.3160519999219105}]
+4 invalid type: HTTP 422 -> {'detail': [{'type': 'literal_error', 'loc': ['body', 'type'], 'msg': "Input should be 'L', 'M' or 'H'", 'input': 'X', 'ctx': {'expected': "'L', 'M' or 'H'"}}]}
+5 missing torque: HTTP 422 -> {'detail': [{'type': 'missing', 'loc': ['body', 'torque'], 'msg': 'Field required', 'input': {'type': 'M', 'air_temp': 298.5, 'process_temp': 309.0, 'rpm': 1550, 'tool_wear': 20}}]}
+6 negative rpm: HTTP 422 -> {'detail': [{'type': 'greater_than', 'loc': ['body', 'rpm'], 'msg': 'Input should be greater than 0', 'input': -100, 'ctx': {'gt': 0.0}}]}
+7 unknown model: HTTP 404 -> {'detail': "Unknown model 'svm'. Choose logreg, rf, or xgb."}
+
+8 five genuine held-out rows:
+row 1 HTTP 200 actual 0 [{'model': 'logreg', 'failure_probability': 0.971350243274331, 'prediction': 1, 'latency_ms': 2.6160510005865945}, {'model': 'rf', 'failure_probability': 0.13666666666666666, 'prediction': 0, 'latency_ms': 62.669192000612384}, {'model': 'xgb', 'failure_probability': 0.39155107736587524, 'prediction': 0, 'latency_ms': 7.734572000117623}]
+row 2 HTTP 200 actual 0 [{'model': 'logreg', 'failure_probability': 0.5379080998601332, 'prediction': 1, 'latency_ms': 1.9765479992202017}, {'model': 'rf', 'failure_probability': 0.0, 'prediction': 0, 'latency_ms': 50.972195000213105}, {'model': 'xgb', 'failure_probability': 0.0004179449751973152, 'prediction': 0, 'latency_ms': 3.84386999940034}]
+row 3 HTTP 200 actual 0 [{'model': 'logreg', 'failure_probability': 0.6801962751360725, 'prediction': 1, 'latency_ms': 1.8601020001369761}, {'model': 'rf', 'failure_probability': 0.05333333333333334, 'prediction': 0, 'latency_ms': 61.957139001606265}, {'model': 'xgb', 'failure_probability': 0.3809778392314911, 'prediction': 0, 'latency_ms': 6.835287998910644}]
+row 4 HTTP 200 actual 0 [{'model': 'logreg', 'failure_probability': 0.010476801923526676, 'prediction': 0, 'latency_ms': 2.4721940008021193}, {'model': 'rf', 'failure_probability': 0.01, 'prediction': 0, 'latency_ms': 62.28372599980503}, {'model': 'xgb', 'failure_probability': 0.002941578859463334, 'prediction': 0, 'latency_ms': 4.78610999925877}]
+row 5 HTTP 200 actual 0 [{'model': 'logreg', 'failure_probability': 0.8547877615367413, 'prediction': 1, 'latency_ms': 1.85317099931126}, {'model': 'rf', 'failure_probability': 0.07, 'prediction': 0, 'latency_ms': 48.48577899974771}, {'model': 'xgb', 'failure_probability': 0.10454893112182617, 'prediction': 0, 'latency_ms': 3.4715359997790074}]
+Agreement: {'logreg': '1/5 (20%)', 'rf': '5/5 (100%)', 'xgb': '5/5 (100%)'}
+
+100-request average model latency:
+logreg 2.1065 ms
+rf 59.2444 ms
+xgb 2.8433 ms
